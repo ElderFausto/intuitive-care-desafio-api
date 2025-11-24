@@ -42,7 +42,6 @@ defineProps({
   overflow: hidden;
 }
 
-/* Detalhe colorido na esquerda do card */
 .card::before {
   content: '';
   position: absolute;

@@ -101,8 +101,8 @@ header {
   background: linear-gradient(135deg, #b115c5 0%, #2A4068 100%);
   color: white;
   padding: 60px 20px;
-  border-radius: 0 0 30px 30px; /* Curva moderna embaixo */
-  margin: 0 -20px 50px -20px; /* Estoura a margem para encostar nas bordas */
+  border-radius: 0 0 30px 30px;
+  margin: 0 -20px 50px -20px;
   text-align: center;
   box-shadow: 0 4px 20px rgba(28, 43, 75, 0.2);
 }
@@ -146,7 +146,7 @@ header p {
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  top: -30px; /* Sobe um pouco para ficar em cima do header */
+  top: -30px; 
 }
 
 .search-input {
@@ -157,7 +157,7 @@ header p {
   border-radius: 16px;
   outline: none;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Sombra flutuante */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   box-sizing: border-box;
   background: white;
   color: #1C2B4B;
@@ -172,7 +172,6 @@ header p {
   box-shadow: 0 15px 35px rgba(28, 43, 75, 0.12);
 }
 
-/* SPINNER COLORIDO */
 .spinner {
   position: absolute;
   right: 24px;
@@ -181,7 +180,7 @@ header p {
   width: 24px;
   height: 24px;
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #FF4081; /* Rosa vibrante do logo */
+  border-top: 3px solid #FF4081;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
