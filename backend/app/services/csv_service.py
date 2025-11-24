@@ -1,6 +1,7 @@
 import pandas as pd
 from rapidfuzz import process, fuzz, utils
 import os
+import re
 
 class CsvService:
     def __init__(self, file_path: str):
@@ -35,6 +36,29 @@ class CsvService:
             print(f"Erro crítico ao ler CSV: {e}")
             self.df = pd.DataFrame()
 
+    def _format_response(self, row):
+        """Helper para formatar a linha do DF para o nosso objeto JSON (evita repetição)"""
+        ddd = str(row.get("DDD", "")).strip()
+        tel = str(row.get("Telefone", "")).strip()
+        telefone_completo = f"({ddd}) {tel}" if ddd and tel else tel
+
+        return {
+            "registro_ans": row.get("REGISTRO_OPERADORA", ""),
+            "cnpj": row.get("CNPJ", ""),
+            "razao_social": row.get("Razao_Social", ""),
+            "nome_fantasia": row.get("Nome_Fantasia", ""),
+            "modalidade": row.get("Modalidade", ""),
+            "logradouro": row.get("Logradouro", ""),
+            "numero": row.get("Numero", ""),
+            "complemento": row.get("Complemento", ""),
+            "bairro": row.get("Bairro", ""),
+            "cidade": row.get("Cidade", ""),
+            "uf": row.get("UF", ""),
+            "cep": row.get("CEP", ""),
+            "telefone": telefone_completo,
+            "email": row.get("Endereco_eletronico", "")
+        }
+
     def search(self, query: str, limit: int = 20):
         """
         Busca Fuzzy refinada para priorizar matches parciais exatos.
@@ -42,6 +66,25 @@ class CsvService:
         if self.df.empty:
             return []
 
+        response_data = []
+
+        # BUSCA POR CNPJ
+        # Regex que remove tudo que não for número da busca pontos e traços
+        query_only_nums = re.sub(r'[^0-9]', '', query)
+
+        # Se o usuário digitar 3 números prioriza a busca por CNPJ
+        if len(query_only_nums) >= 3:
+            # Filtra o DataFrame onde a coluna CNPJ contém os números digitados
+            cnpj_matches = self.df[self.df['CNPJ'].str.contains(query_only_nums, na=False)]
+            
+            if not cnpj_matches.empty:
+                # Se achou por CNPJ, retorna logo esses resultados com prioridade máxima
+                for _, row in cnpj_matches.head(limit).iterrows():
+                    response_data.append(self._format_response(row))
+                
+                return response_data
+
+        # BUSCA POR NOME
         choices = self.df['Razao_Social'].tolist()
         
         # troca o WRatio por partial_token_sort_ratio
@@ -53,32 +96,16 @@ class CsvService:
             processor=utils.default_process
         )
         
-        response_data = []
         for _, score, index in results:
             if score > 60: 
                 row = self.df.iloc[index]
                 
-                ddd = str(row.get("DDD", "")).strip()
-                tel = str(row.get("Telefone", "")).strip()
-                telefone_completo = f"({ddd}) {tel}" if ddd and tel else tel
-
-                item = {
-                    "registro_ans": row.get("REGISTRO_OPERADORA", ""),
-                    "cnpj": row.get("CNPJ", ""),
-                    "razao_social": row.get("Razao_Social", ""),
-                    "nome_fantasia": row.get("Nome_Fantasia", ""),
-                    "modalidade": row.get("Modalidade", ""),
-                    "logradouro": row.get("Logradouro", ""),
-                    "numero": row.get("Numero", ""),
-                    "complemento": row.get("Complemento", ""),
-                    "bairro": row.get("Bairro", ""),
-                    "cidade": row.get("Cidade", ""),
-                    "uf": row.get("UF", ""),
-                    "cep": row.get("CEP", ""),
-                    "telefone": telefone_completo,
-                    "email": row.get("Endereco_eletronico", "")
-                }
-                response_data.append(item)
+                # Formata a resposta
+                item = self._format_response(row)
+                
+                # Evita duplicatas se já tiver achado algo
+                if item not in response_data:
+                    response_data.append(item)
                 
         return response_data
 
