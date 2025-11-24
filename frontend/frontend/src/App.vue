@@ -2,10 +2,9 @@
   <div class="app-container">
     <header>
       <div class="logo-area">
-        <h1>Busca Operadoras</h1>
-        <span class="tag">ANS</span>
+        <h1>Buscar Operadoras</h1>
       </div>
-      <p>Pesquise na base de dados oficial da Agência Nacional de Saúde.</p>
+      <p>Encontre informações detalhadas sobre operadoras de saúde no Brasil.</p>
     </header>
 
     <main>
@@ -14,14 +13,19 @@
           type="text" 
           v-model="searchQuery" 
           placeholder="Digite o nome, razão social ou fantasia..."
+          @input="handleInput"
           class="search-input"
         />
-        </div>
+        <div v-if="loading" class="spinner"></div>
+      </div>
 
       <div class="results-area">
-        <div class="status-msg">
-          <p class="success">
-            Operadoras
+        <div v-if="hasSearched && !loading" class="status-msg">
+          <p v-if="operadoras.length > 0" class="success">
+            Encontramos <strong>{{ operadoras.length }}</strong> operadoras relevantes.
+          </p>
+          <p v-else class="empty">
+            Nenhum resultado encontrado para "{{ searchQuery }}".
           </p>
         </div>
 
@@ -39,116 +43,170 @@
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import debounce from 'lodash/debounce'
 import OperadoraCard from './components/OperadoraCard.vue'
 
 const searchQuery = ref('')
+const operadoras = ref([])
+const loading = ref(false)
+const hasSearched = ref(false)
 
-const operadoras = ref([
-  {
-    registro_ans: "123456",
-    cnpj: "00.000.000/0001-99",
-    razao_social: "UNIMED EXEMPLO LTDA",
-    modalidade: "Cooperativa Médica",
-    cidade: "Xique-Xique",
-    uf: "BA",
-    telefone: "(11) 9999-9999",
-    email: "contato@exemplo.com"
-  },
-  {
-    registro_ans: "654321",
-    cnpj: "11.111.111/0001-11",
-    razao_social: "BRADESCO SAÚDE TESTE",
-    modalidade: "Seguradora",
-    cidade: "Rio de Janeiro",
-    uf: "RJ",
-    telefone: "(21) 8888-8888",
-    email: "sac@teste.com"
-  },
-  {
-    registro_ans: "789012",
-    cnpj: "22.222.222/0001-22",
-    razao_social: "ODONTO PREV S.A.",
-    modalidade: "Odontologia",
-    cidade: "Curitiba",
-    uf: "PR",
-    telefone: "(41) 3333-3333",
-    email: ""
+const API_URL = 'http://127.0.0.1:8000/operadoras/search'
+
+const fetchOperadoras = async (query) => {
+  if (!query || query.length < 3) {
+    operadoras.value = []
+    hasSearched.value = false
+    loading.value = false
+    return
   }
-])
+
+  loading.value = true
+  hasSearched.value = true
+
+  try {
+    const response = await axios.get(API_URL, {
+      params: { q: query }
+    })
+    operadoras.value = response.data
+  } catch (error) {
+    console.error("Erro na API:", error)
+    operadoras.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+// Debounce de 500ms
+const debouncedSearch = debounce((query) => {
+  fetchOperadoras(query)
+}, 500)
+
+const handleInput = () => {
+  debouncedSearch(searchQuery.value)
+}
 </script>
 
 <style scoped>
 .app-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 20px;
-  font-family: 'Segoe UI', sans-serif;
-  color: #2c3e50;
+  padding: 0 20px 60px 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1C2B4B;
 }
 
 header {
+  background: linear-gradient(135deg, #b115c5 0%, #2A4068 100%);
+  color: white;
+  padding: 60px 20px;
+  border-radius: 0 0 30px 30px; /* Curva moderna embaixo */
+  margin: 0 -20px 50px -20px; /* Estoura a margem para encostar nas bordas */
   text-align: center;
-  margin-bottom: 50px;
+  box-shadow: 0 4px 20px rgba(28, 43, 75, 0.2);
 }
 
 .logo-area {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 h1 {
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 800;
   margin: 0;
-  color: #2d3748;
+  letter-spacing: -1px;
 }
 
 .tag {
-  background: #42b983;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  backdrop-filter: blur(4px);
 }
 
 header p {
-  color: #718096;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 1.1rem;
+  font-weight: 300;
   margin-top: 8px;
 }
 
+/* BUSCA ESTILIZADA */
 .search-wrapper {
   position: relative;
   margin-bottom: 40px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  top: -30px; /* Sobe um pouco para ficar em cima do header */
 }
 
 .search-input {
   width: 100%;
-  padding: 18px 24px;
-  font-size: 1.1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  padding: 22px 60px 22px 28px;
+  font-size: 1.15rem;
+  border: 0;
+  border-radius: 16px;
   outline: none;
-  transition: all 0.3s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Sombra flutuante */
   box-sizing: border-box;
+  background: white;
+  color: #1C2B4B;
+}
+
+.search-input::placeholder {
+  color: #A0AEC0;
 }
 
 .search-input:focus {
-  border-color: #42b983;
-  box-shadow: 0 0 0 3px rgba(66, 185, 131, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(28, 43, 75, 0.12);
 }
 
+/* SPINNER COLORIDO */
+.spinner {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #FF4081; /* Rosa vibrante do logo */
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { 0% { transform: translateY(-50%) rotate(0deg); } 100% { transform: translateY(-50%) rotate(360deg); } }
+
+/* MENSAGENS DE STATUS */
 .status-msg {
   text-align: center;
-  margin-bottom: 24px;
-  color: #718096;
+  margin-bottom: 30px;
+  color: #7A869A;
   font-size: 0.95rem;
+}
+
+.success {
+  color: #1C2B4B;
+}
+
+.empty {
+  background: #FFF5F5;
+  color: #C53030;
+  padding: 12px 24px;
+  border-radius: 8px;
+  display: inline-block;
+  font-weight: 500;
 }
 
 .cards-grid {
@@ -157,10 +215,9 @@ header p {
   gap: 24px;
 }
 
-/* Responsividade */
 @media (max-width: 640px) {
-  .cards-grid { grid-template-columns: 1fr; }
   h1 { font-size: 1.8rem; }
-  .app-container { padding: 20px 16px; }
+  header { padding: 40px 20px; border-radius: 0 0 20px 20px; }
+  .search-wrapper { top: -20px; padding: 0 10px; }
 }
 </style>
