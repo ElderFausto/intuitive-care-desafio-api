@@ -53,7 +53,8 @@ const searchQuery = ref("");
 const operadoras = ref([]);
 const loading = ref(false);
 const hasSearched = ref(false);
-const API_URL = "http://127.0.0.1:8000/operadoras/search";
+// API URL from environment variable or default
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/operadoras/search";
 
 const fetchOperadoras = async (query) => {
   if (!query || query.length < 3) {

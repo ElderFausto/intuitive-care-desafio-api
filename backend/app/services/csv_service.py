@@ -35,35 +35,33 @@ class CsvService:
             print(f"Erro crítico ao ler CSV: {e}")
             self.df = pd.DataFrame()
 
-    def search(self, query: str, limit: int = 10):
+    def search(self, query: str, limit: int = 20):
         """
-        Busca Fuzzy por Razão Social.
+        Busca Fuzzy refinada para priorizar matches parciais exatos.
         """
         if self.df.empty:
             return []
 
         choices = self.df['Razao_Social'].tolist()
         
-        # Extrai os melhores matches
+        # troca o WRatio por partial_token_sort_ratio
         results = process.extract(
             query, 
             choices, 
-            scorer=fuzz.WRatio, 
+            scorer=fuzz.partial_token_sort_ratio,
             limit=limit,
-            processor=utils.default_process  # Ignora acentuação
+            processor=utils.default_process
         )
         
         response_data = []
         for _, score, index in results:
-            if score > 50: # filtro de relevancia mínima
+            if score > 60: 
                 row = self.df.iloc[index]
                 
-                # telefone ddd + numero
                 ddd = str(row.get("DDD", "")).strip()
                 tel = str(row.get("Telefone", "")).strip()
                 telefone_completo = f"({ddd}) {tel}" if ddd and tel else tel
 
-                # colunas do CSV mapeadas
                 item = {
                     "registro_ans": row.get("REGISTRO_OPERADORA", ""),
                     "cnpj": row.get("CNPJ", ""),
