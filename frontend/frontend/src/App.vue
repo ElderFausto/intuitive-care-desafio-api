@@ -1,39 +1,41 @@
 <template>
   <div class="app-container">
     <header>
-      <div class="logo-area">
-        <h1>Buscar Operadoras</h1>
+      <div class="logo-container">
+        <img src="./assets/logo.png" alt="Intuitive Care logo" />
       </div>
-      <p>Encontre informações detalhadas sobre operadoras de saúde no Brasil.</p>
+      <p class="subtitle">Busca oficial de operadoras ativas na ANS</p>
     </header>
 
     <main>
       <div class="search-wrapper">
-        <input 
-          type="text" 
-          v-model="searchQuery" 
-          placeholder="Digite o nome, razão social ou fantasia..."
-          @input="handleInput"
-          class="search-input"
-        />
-        <div v-if="loading" class="spinner"></div>
+        <div class="input-group">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Digite o nome, razão social ou CNPJ..."
+            @input="handleInput"
+            class="search-input"
+          />
+          <div v-if="loading" class="spinner"></div>
+        </div>
       </div>
 
       <div class="results-area">
         <div v-if="hasSearched && !loading" class="status-msg">
           <p v-if="operadoras.length > 0" class="success">
-            Encontramos <strong>{{ operadoras.length }}</strong> operadoras relevantes.
+            Encontramos <strong>{{ operadoras.length }}</strong> operadoras
+            relevantes.
           </p>
-          <p v-else class="empty">
-            Nenhum resultado encontrado para "{{ searchQuery }}".
-          </p>
+          <p v-else class="empty">Nenhum resultado para "{{ searchQuery }}".</p>
         </div>
 
         <div class="cards-grid">
-          <OperadoraCard 
-            v-for="op in operadoras" 
-            :key="op.registro_ans" 
-            :operadora="op" 
+          <OperadoraCard
+            v-for="op in operadoras"
+            :key="op.registro_ans"
+            :operadora="op"
           />
         </div>
       </div>
@@ -42,181 +44,229 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios'
-import debounce from 'lodash/debounce'
-import OperadoraCard from './components/OperadoraCard.vue'
+import { ref } from "vue";
+import axios from "axios";
+import debounce from "lodash/debounce";
+import OperadoraCard from "./components/OperadoraCard.vue";
 
-const searchQuery = ref('')
-const operadoras = ref([])
-const loading = ref(false)
-const hasSearched = ref(false)
-
-const API_URL = 'http://127.0.0.1:8000/operadoras/search'
+const searchQuery = ref("");
+const operadoras = ref([]);
+const loading = ref(false);
+const hasSearched = ref(false);
+const API_URL = "http://127.0.0.1:8000/operadoras/search";
 
 const fetchOperadoras = async (query) => {
   if (!query || query.length < 3) {
-    operadoras.value = []
-    hasSearched.value = false
-    loading.value = false
-    return
+    operadoras.value = [];
+    hasSearched.value = false;
+    loading.value = false;
+    return;
   }
-
-  loading.value = true
-  hasSearched.value = true
-
+  loading.value = true;
+  hasSearched.value = true;
   try {
-    const response = await axios.get(API_URL, {
-      params: { q: query }
-    })
-    operadoras.value = response.data
+    const response = await axios.get(API_URL, { params: { q: query } });
+    operadoras.value = response.data;
   } catch (error) {
-    console.error("Erro na API:", error)
-    operadoras.value = []
+    console.error("Erro na API:", error);
+    operadoras.value = [];
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
-// Debounce de 500ms
 const debouncedSearch = debounce((query) => {
-  fetchOperadoras(query)
-}, 500)
-
+  fetchOperadoras(query);
+}, 500);
 const handleInput = () => {
-  debouncedSearch(searchQuery.value)
-}
+  debouncedSearch(searchQuery.value);
+};
 </script>
 
 <style scoped>
 .app-container {
-  max-width: 1000px;
+  max-width: 62.5rem; /* 1000px */
   margin: 0 auto;
-  padding: 0 20px 60px 20px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #1C2B4B;
+  padding: 0 1.25rem 3.75rem 1.25rem; /* 0 20px 60px 20px */
+  font-family: "Inter", sans-serif;
+  color: #1c2b4b;
 }
 
 header {
-  background: linear-gradient(135deg, #b115c5 0%, #2A4068 100%);
-  color: white;
-  padding: 60px 20px;
-  border-radius: 0 0 30px 30px;
-  margin: 0 -20px 50px -20px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(28, 43, 75, 0.2);
-}
-
-.logo-area {
+  padding: 3.125rem 1.25rem 5.625rem 1.25rem;
+  margin: 0 -1.25rem 0 -1.25rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin: 0;
-  letter-spacing: -1px;
-}
-
-.tag {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.8rem;
-  backdrop-filter: blur(4px);
-}
-
-header p {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.1rem;
-  font-weight: 300;
-  margin-top: 8px;
-}
-
-/* BUSCA ESTILIZADA */
-.search-wrapper {
+  flex-direction: column;
+  align-items: center; /* Centraliza horizontalmente o container da logo e o texto */
   position: relative;
-  margin-bottom: 40px;
-  max-width: 700px;
+  text-align: center; /* Garante que textos quebrem centralizados */
+}
+
+/* LOGO CENTRALIZADA */
+.logo-container {
+  width: 100%;
+  max-width: 17.5rem; /* 280px Desktop */
+  margin-bottom: 0.75rem;
+  transition: max-width 0.3s ease;
+  
+  /* CENTRALIZAÇÃO: */
+  display: flex; 
+  justify-content: center; /* Centraliza a imagem DENTRO do container */
+  margin-left: auto;      /* Garante margens iguais */
+  margin-right: auto;
+}
+
+.brand-logo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.subtitle {
+  color: #a0aec0;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 0.031rem;
+  text-align: center;
+  padding: 0 0.625rem;
+}
+
+/* --- BARRA DE BUSCA --- */
+.search-wrapper {
+  margin-top: -2.81rem; 
+  margin-bottom: 2.5rem;
+  max-width: 43.75rem;
   margin-left: auto;
   margin-right: auto;
-  top: -30px; 
+  position: relative;
+  z-index: 10;
+  padding: 0 0.625rem;
+}
+
+.input-group {
+  position: relative;
+  background: white;
+  border-radius: 3.125rem;
+  box-shadow: 0 0.625rem 1.56rem rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0.31rem 0.625rem;
+  transition: transform 0.2s;
+}
+
+.input-group:focus-within {
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.93rem 2.18rem rgba(0, 0, 0, 0.15);
+}
+
+.search-icon {
+  font-size: 1.2rem;
+  padding-left: 0.93rem;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
   width: 100%;
-  padding: 22px 60px 22px 28px;
-  font-size: 1.15rem;
-  border: 0;
-  border-radius: 16px;
+  padding: 1.125rem 1rem;
+  font-size: 1.1rem;
+  border: none;
+  background: transparent;
   outline: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  box-sizing: border-box;
-  background: white;
-  color: #1C2B4B;
+  color: #1c2b4b;
 }
 
 .search-input::placeholder {
-  color: #A0AEC0;
-}
-
-.search-input:focus {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 35px rgba(28, 43, 75, 0.12);
+  color: #a0aec0;
 }
 
 .spinner {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #FF4081;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0.125rem solid #f3f3f3;
+  border-top: 0.125rem solid #ff4081;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+  margin-right: 0.93rem;
+  flex-shrink: 0;
 }
 
-@keyframes spin { 0% { transform: translateY(-50%) rotate(0deg); } 100% { transform: translateY(-50%) rotate(360deg); } }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-/* MENSAGENS DE STATUS */
 .status-msg {
   text-align: center;
-  margin-bottom: 30px;
-  color: #7A869A;
-  font-size: 0.95rem;
+  margin-bottom: 1.875rem;
+  color: #7a869a;
 }
 
-.success {
-  color: #1C2B4B;
-}
-
+.success { color: #2d3748; }
 .empty {
-  background: #FFF5F5;
-  color: #C53030;
-  padding: 12px 24px;
-  border-radius: 8px;
+  background: #fff5f5;
+  color: #c53030;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
   display: inline-block;
-  font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1.5rem;
 }
 
-@media (max-width: 640px) {
-  h1 { font-size: 1.8rem; }
-  header { padding: 40px 20px; border-radius: 0 0 20px 20px; }
-  .search-wrapper { top: -20px; padding: 0 10px; }
+/* Mobile*/
+@media (max-width: 40rem) {
+  header {
+    padding: 1.875rem 1.25rem 4.375rem 1.25rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo-container {
+    max-width: 11.25rem;
+    margin-left: auto; 
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .brand-logo {
+    margin: 0 auto;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+  }
+
+  .search-wrapper {
+    margin-top: -2.18rem;
+    padding: 0;
+  }
+
+  .search-input {
+    padding: 0.875rem 0.75rem;
+    font-size: 1rem;
+  }
+
+  .search-icon {
+    padding-left: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .app-container {
+    padding-bottom: 2.5rem;
+  }
 }
 </style>
