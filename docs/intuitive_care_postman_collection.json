@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "61aeecf9-0b31-4dff-b081-c4a8fd80815f",
+		"name": "Intuitive Care API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50320246",
+		"_collection_link": "https://elderfausto-69c3a16f-1977090.postman.co/workspace/%C3%89lder-Fausto's-Workspace~381f3bc0-30a0-4b68-8f66-0a944924c351/collection/50320246-61aeecf9-0b31-4dff-b081-c4a8fd80815f?action=share&source=collection_link&creator=50320246"
+	},
+	"item": [
+		{
+			"name": "Buscar Operadora",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": [
+				{
+					"name": "Busca Unimed",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/operadoras/search?q=unimed",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"operadoras",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "unimed"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 24 Nov 2025 16:07:44 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "3917"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"registro_ans\": \"354996\",\n        \"cnpj\": \"42946061000196\",\n        \"razao_social\": \"UNIMED ALFENAS COOPERATIVA DE TRABALHO MEDICO\",\n        \"nome_fantasia\": \"UNIMED ALFENAS\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"RUA PRESIDENTE ARTUR BERNARDES\",\n        \"numero\": \"189\",\n        \"complemento\": \"\",\n        \"bairro\": \"CENTRO\",\n        \"cidade\": \"Alfenas\",\n        \"uf\": \"MG\",\n        \"cep\": \"37130000\",\n        \"telefone\": \"(35) 37130000\",\n        \"email\": \"unimed@unimedalfenas.com.br\"\n    },\n    {\n        \"registro_ans\": \"345598\",\n        \"cnpj\": \"65422339000121\",\n        \"razao_social\": \"UNIMED AMPARO COOPERATIVA DE TRABALHO MÉDICO\",\n        \"nome_fantasia\": \"UNIMED AMPARO\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"AV. DA SAUDADE\",\n        \"numero\": \"369\",\n        \"complemento\": \"\",\n        \"bairro\": \"SILVESTRE\",\n        \"cidade\": \"Amparo\",\n        \"uf\": \"SP\",\n        \"cep\": \"13900570\",\n        \"telefone\": \"(19) 38087077\",\n        \"email\": \"diretoria@unimedamparo.coop.br\"\n    },\n    {\n        \"registro_ans\": \"312347\",\n        \"cnpj\": \"26629238000174\",\n        \"razao_social\": \"UNIMED ANÁPOLIS COOPERATIVA DE TRABALHO MÉDICO.\",\n        \"nome_fantasia\": \"UNIMED ANÁPOLIS\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"AV. FAYAD HANNA\",\n        \"numero\": \"0000\",\n        \"complemento\": \"Q B LT 1,2 E 3\",\n        \"bairro\": \"CIDADE JARDIM\",\n        \"cidade\": \"Anápolis\",\n        \"uf\": \"GO\",\n        \"cep\": \"75080410\",\n        \"telefone\": \"(62) 33333330\",\n        \"email\": \"regulacao.ans@unimedanapolis.com.br\"\n    },\n    {\n        \"registro_ans\": \"358096\",\n        \"cnpj\": \"81064511000179\",\n        \"razao_social\": \"UNIMED APUCARANA COOPERATIVA DE TRABALHO MÉDICO\",\n        \"nome_fantasia\": \"UNIMED APUCARANA\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"RUA DESEMBARGADOR CLOTARIO PORTUGAL\",\n        \"numero\": \"927\",\n        \"complemento\": \"\",\n        \"bairro\": \"CENTRO\",\n        \"cidade\": \"Apucarana\",\n        \"uf\": \"PR\",\n        \"cep\": \"86800020\",\n        \"telefone\": \"(43) 34208500\",\n        \"email\": \"ans@unimedapucarana.coop.br\"\n    },\n    {\n        \"registro_ans\": \"354325\",\n        \"cnpj\": \"20909271000171\",\n        \"razao_social\": \"UNIMED ARAGUARI COOPERATIVA DE TRABALHO MÉDICO \",\n        \"nome_fantasia\": \"UNIMED ARAGUARI\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"AV. CORONEL TEODOLINO PEREIRA DE ARAÚJO\",\n        \"numero\": \"801\",\n        \"complemento\": \"\",\n        \"bairro\": \"CENTRO\",\n        \"cidade\": \"Araguari\",\n        \"uf\": \"MG\",\n        \"cep\": \"38440062\",\n        \"telefone\": \"(34) 32425151\",\n        \"email\": \"juridico@unimedaraguari.coop.br\"\n    },\n    {\n        \"registro_ans\": \"303976\",\n        \"cnpj\": \"04201372000137\",\n        \"razao_social\": \"UNIMED BELÉM COOPERATIVA DE TRABALHO MÉDICO\",\n        \"nome_fantasia\": \"UNIMED BELÉM\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"TRAVESSA CURUZÚ\",\n        \"numero\": \"2212\",\n        \"complemento\": \"\",\n        \"bairro\": \"MARCO\",\n        \"cidade\": \"Belém\",\n        \"uf\": \"PA\",\n        \"cep\": \"66085823\",\n        \"telefone\": \"(91) 40095272\",\n        \"email\": \"ans@unimedbelem.com.br\"\n    },\n    {\n        \"registro_ans\": \"350346\",\n        \"cnpj\": \"01143922000110\",\n        \"razao_social\": \"UNIMED CACERES COOPERATIVA DE TRABALHO MÉDICO \",\n        \"nome_fantasia\": \"UNIMED CÁCERES\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"RUA CORONEL JOSE DULCE\",\n        \"numero\": \"458\",\n        \"complemento\": \"\",\n        \"bairro\": \"CENTRO\",\n        \"cidade\": \"Cáceres\",\n        \"uf\": \"MT\",\n        \"cep\": \"78200000\",\n        \"telefone\": \"(65) 32111200\",\n        \"email\": \"ans@unimedcaceres.com.br\"\n    },\n    {\n        \"registro_ans\": \"340952\",\n        \"cnpj\": \"24449225000198\",\n        \"razao_social\": \"UNIMED CARUARU-COOPERATIVA DE TRABALHO MEDICO\",\n        \"nome_fantasia\": \"UNIMED CARUARU\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"AVENIDA ADJAR DA SILVA CASÉ\",\n        \"numero\": \"800\",\n        \"complemento\": \"ED. CARUARU CORPORATE, TERREO E 3º ANDAR\",\n        \"bairro\": \"INDIANÁPOLIS\",\n        \"cidade\": \"Caruaru\",\n        \"uf\": \"PE\",\n        \"cep\": \"55024740\",\n        \"telefone\": \"(81) 21035068\",\n        \"email\": \"contabil@unimedcaruaru.com.br\"\n    },\n    {\n        \"registro_ans\": \"311146\",\n        \"cnpj\": \"36540979000138\",\n        \"razao_social\": \"UNIMED COSTA VERDE RJ\",\n        \"nome_fantasia\": \"UNIMED COSTA VERDE\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"RUA MOISES ABRAAO\",\n        \"numero\": \"133\",\n        \"complemento\": \"\",\n        \"bairro\": \"CENTRO\",\n        \"cidade\": \"Itaguaí\",\n        \"uf\": \"RJ\",\n        \"cep\": \"23815460\",\n        \"telefone\": \"(21) 26884919\",\n        \"email\": \"diretoria@costaverde.unimed.com.br\"\n    },\n    {\n        \"registro_ans\": \"342084\",\n        \"cnpj\": \"03533726000188\",\n        \"razao_social\": \"UNIMED CUIABA COOPERATIVA DE TRABALHO MÉDICO\",\n        \"nome_fantasia\": \"UNIMED CUIABÁ\",\n        \"modalidade\": \"Cooperativa Médica\",\n        \"logradouro\": \"RUA BARAO DE MELGAÇO\",\n        \"numero\": \"2713\",\n        \"complemento\": \"\",\n        \"bairro\": \"CENTRO SUL\",\n        \"cidade\": \"Cuiabá\",\n        \"uf\": \"MT\",\n        \"cep\": \"78020800\",\n        \"telefone\": \"(65) 36123339\",\n        \"email\": \"nucleoans@unimedcuiaba.coop.br\"\n    }\n]"
+				}
+			]
+		}
+	]
+}

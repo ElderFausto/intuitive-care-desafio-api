@@ -1,5 +1,5 @@
 import pandas as pd
-from rapidfuzz import process, fuzz
+from rapidfuzz import process, fuzz, utils
 import os
 
 class CsvService:
@@ -22,7 +22,7 @@ class CsvService:
             # Tenta ler como UTF-8 primeiro
             self.df = pd.read_csv(self.file_path, sep=';', encoding='utf-8', dtype=str)
             self.df = self.df.fillna("")
-            print("Sucesso: CSV carregado na memória!")
+            print("Sucesso: CSV carregado!")
         except UnicodeDecodeError:
             # Se falhar tenta o latin1 
             try:
@@ -32,7 +32,7 @@ class CsvService:
             except Exception as e:
                 print(f"Erro de encoding: {e}")
         except Exception as e:
-            print(f"Erro crítico ao ler o CSV: {e}")
+            print(f"Erro crítico ao ler CSV: {e}")
             self.df = pd.DataFrame()
 
     def search(self, query: str, limit: int = 10):
@@ -49,7 +49,8 @@ class CsvService:
             query, 
             choices, 
             scorer=fuzz.WRatio, 
-            limit=limit
+            limit=limit,
+            processor=utils.default_process  # Ignora acentuação
         )
         
         response_data = []
@@ -57,7 +58,7 @@ class CsvService:
             if score > 50: # filtro de relevancia mínima
                 row = self.df.iloc[index]
                 
-                # telefone DDD + Numero
+                # telefone ddd + numero
                 ddd = str(row.get("DDD", "")).strip()
                 tel = str(row.get("Telefone", "")).strip()
                 telefone_completo = f"({ddd}) {tel}" if ddd and tel else tel
@@ -83,5 +84,5 @@ class CsvService:
                 
         return response_data
 
-# instancia singleton
+# Instância Singleton
 csv_service = CsvService("data/operadoras.csv")
