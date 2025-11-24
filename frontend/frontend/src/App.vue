@@ -132,11 +132,11 @@ header {
   padding: 0 0.625rem;
 }
 
-/* --- BARRA DE BUSCA --- */
+/* BARRA DE PESQUISA */
 .search-wrapper {
   margin-top: -2.81rem; 
   margin-bottom: 2.5rem;
-  max-width: 43.75rem;
+  max-width: 31.25rem;
   margin-left: auto;
   margin-right: auto;
   position: relative;
