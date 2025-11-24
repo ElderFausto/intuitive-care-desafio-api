@@ -33,7 +33,7 @@ def read_root():
 @app.get("/operadoras/search", response_model=List[Operadora], tags=["Operadoras"])
 def search_operadoras(
     q: str = Query(..., min_length=3, description="Termo para busca (Ex: 'Unimed', 'Bradesco')"),
-    limit: int = Query(10, le=50, description="Limite de resultados")
+    limit: int = Query(10, le=100, description="Resultados por página")
 ):
     """
     **Busca Inteligente de Operadoras**
