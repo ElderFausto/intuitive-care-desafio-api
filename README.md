@@ -92,7 +92,7 @@ A maneira mais simples e garantida de rodar a aplicação, sem se preocupar com 
 2.  **Subir os containers:**
     Este comando irá construir as imagens do Python e Node.js e iniciar os serviços.
     ```bash
-    sudo docker compose up --build
+    docker compose up --build
     ```
 
 3.  **Acessar à aplicação:**
