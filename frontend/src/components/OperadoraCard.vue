@@ -241,6 +241,6 @@ h3 {
 .badge-default { background-color: #F1F5F9 !important; color: #64748B !important; }
 
 @media (max-width: 40rem) {
-  .card { padding: 1.25rem; }
+  .card { padding: 1rem; }
 }
 </style>
