@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
+from typing import List, Optional # <--- Adicione Optional
 from app.services.csv_service import csv_service
 from app.schemas.operadora import Operadora
 
 app = FastAPI(
     title="Intuitive Care Teste de API",
-    description="API de busca de operadoras ativas na ANS com busca textual (Fuzzy Search).",
+    description="API de busca de operadoras ativas na ANS.",
     version="1.0.0"
 )
 
@@ -28,12 +28,20 @@ app.add_middleware(
 
 @app.get("/", tags=["Health"])
 def read_root():
-    return {"status": "ok", "message": "API Intuitive Care rodando! Acesse /docs para documentação."}
+    return {"status": "ok", "message": "API Intuitive Care rodando!"}
 
+# Listar Estados
+@app.get("/operadoras/ufs", tags=["Auxiliar"])
+def get_ufs():
+    """Retorna a lista de todos os estados (UFs) disponíveis no CSV"""
+    return csv_service.get_all_ufs()
+
+# Aceita parâmetro 'uf'
 @app.get("/operadoras/search", response_model=List[Operadora], tags=["Operadoras"])
 def search_operadoras(
-    q: str = Query(..., min_length=3, description="Termo para busca (Ex: 'Unimed', 'Bradesco')"),
-    limit: int = Query(10, le=100, description="Resultados por página")
+    q: str = Query(..., min_length=3, description="Termo para busca"),
+    uf: Optional[str] = Query(None, min_length=2, max_length=2, description="Sigla do Estado (Ex: SP, RJ)"),
+    limit: int = Query(20, le=100)
 ):
     """
     **Busca Inteligente de Operadoras**
@@ -42,7 +50,8 @@ def search_operadoras(
     Retorna os resultados ordenados por relevância (score de similaridade).
     """
     try:
-        results = csv_service.search(q, limit)
+        # Passamos o UF para o serviço
+        results = csv_service.search(q, limit, uf)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
