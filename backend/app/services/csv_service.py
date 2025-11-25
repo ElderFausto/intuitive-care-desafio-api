@@ -37,7 +37,7 @@ class CsvService:
             self.df = pd.DataFrame()
 
     def _format_response(self, row):
-        """Helper para formatar a linha do DF para o nosso objeto JSON (evita repetição)"""
+        """Helper para formatar a linha do DF para o objeto JSON (evita repetição)"""
         ddd = str(row.get("DDD", "")).strip()
         tel = str(row.get("Telefone", "")).strip()
         telefone_completo = f"({ddd}) {tel}" if ddd and tel else tel
@@ -59,7 +59,16 @@ class CsvService:
             "email": row.get("Endereco_eletronico", "")
         }
 
-    def search(self, query: str, limit: int = 20):
+    # Retorna lista de UFs únicas e ordenadas
+    def get_all_ufs(self):
+        if self.df.empty:
+            return []
+        # Pega valores únicos da coluna UF, remove vazios e ordena
+        ufs = self.df['UF'].dropna().unique().tolist()
+        return sorted([uf for uf in ufs if uf])
+
+    # Recebe argumento 'uf' opcional
+    def search(self, query: str, limit: int = 20, uf: str = None):
         """
         Busca Fuzzy refinada para priorizar matches parciais exatos.
         """
@@ -67,6 +76,13 @@ class CsvService:
             return []
 
         response_data = []
+        
+        # FILTRAGEM PRÉVIA POR ESTADO
+        target_df = self.df
+        if uf:
+            target_df = self.df[self.df['UF'] == uf]
+            if target_df.empty:
+                return []
 
         # BUSCA POR CNPJ
         # Regex que remove tudo que não for número da busca pontos e traços
@@ -75,17 +91,15 @@ class CsvService:
         # Se o usuário digitar 3 números prioriza a busca por CNPJ
         if len(query_only_nums) >= 3:
             # Filtra o DataFrame onde a coluna CNPJ contém os números digitados
-            cnpj_matches = self.df[self.df['CNPJ'].str.contains(query_only_nums, na=False)]
+            cnpj_matches = target_df[target_df['CNPJ'].str.contains(query_only_nums, na=False)]
             
             if not cnpj_matches.empty:
-                # Se achou por CNPJ, retorna logo esses resultados com prioridade máxima
                 for _, row in cnpj_matches.head(limit).iterrows():
                     response_data.append(self._format_response(row))
-                
                 return response_data
 
         # BUSCA POR NOME
-        choices = self.df['Razao_Social'].tolist()
+        choices = target_df['Razao_Social'].tolist()
         
         # troca o WRatio por partial_token_sort_ratio
         results = process.extract(
@@ -98,16 +112,13 @@ class CsvService:
         
         for _, score, index in results:
             if score > 60: 
-                row = self.df.iloc[index]
+                row = target_df.iloc[index]
                 
                 # Formata a resposta
                 item = self._format_response(row)
-                
-                # Evita duplicatas se já tiver achado algo
                 if item not in response_data:
                     response_data.append(item)
                 
         return response_data
 
-# Instância Singleton
 csv_service = CsvService("data/operadoras.csv")

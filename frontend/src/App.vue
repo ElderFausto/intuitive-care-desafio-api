@@ -295,7 +295,6 @@ header {
   /* Grid Mobile */
   .cards-grid {
     grid-template-columns: 1fr;
-    /* Garante espaço no mobile também */
     row-gap: 2.5rem; 
   }
 
