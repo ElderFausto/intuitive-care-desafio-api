@@ -86,9 +86,9 @@ const handleInput = () => {
 
 <style scoped>
 .app-container {
-  max-width: 62.5rem; /* 1000px */
+  max-width: 75rem; 
   margin: 0 auto;
-  padding: 0 1.25rem 3.75rem 1.25rem; /* 0 20px 60px 20px */
+  padding: 0 1.25rem 3.75rem 1.25rem;
   font-family: "Inter", sans-serif;
   color: #1c2b4b;
 }
@@ -98,22 +98,20 @@ header {
   margin: 0 -1.25rem 0 -1.25rem;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centraliza horizontalmente o container da logo e o texto */
+  align-items: center;
   position: relative;
-  text-align: center; /* Garante que textos quebrem centralizados */
+  text-align: center;
 }
 
 /* LOGO CENTRALIZADA */
 .logo-container {
   width: 100%;
-  max-width: 17.5rem; /* 280px Desktop */
+  max-width: 17.5rem;
   margin-bottom: 0.75rem;
   transition: max-width 0.3s ease;
-  
-  /* CENTRALIZAÇÃO: */
   display: flex; 
-  justify-content: center; /* Centraliza a imagem DENTRO do container */
-  margin-left: auto;      /* Garante margens iguais */
+  justify-content: center;
+  margin-left: auto;
   margin-right: auto;
 }
 
@@ -137,7 +135,7 @@ header {
 .search-wrapper {
   margin-top: -2.81rem; 
   margin-bottom: 2.5rem;
-  max-width: 31.25rem;
+  max-width: 43.75rem;
   margin-left: auto;
   margin-right: auto;
   position: relative;
@@ -183,6 +181,34 @@ header {
   color: #a0aec0;
 }
 
+/* SELECT DE ESTADOS */
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.uf-select {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 1rem 1.5rem 1rem 1.2rem;
+  font-size: 1rem;
+  color: #1c2b4b;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+.select-arrow {
+  position: absolute;
+  right: 0.5rem;
+  font-size: 0.7rem;
+  color: #a0aec0;
+  pointer-events: none;
+}
+.divider {
+  width: 1px; height: 24px; background-color: #e2e8f0; margin: 0 0.5rem;
+}
+
 .spinner {
   width: 1.25rem;
   height: 1.25rem;
@@ -215,13 +241,33 @@ header {
   font-size: 0.9rem;
 }
 
+/* --- GRID PARA 3 COLUNAS E ESPAÇAMENTO --- */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  gap: 1.5rem;
+  
+  /* 1. Força 3 colunas iguais */
+  grid-template-columns: repeat(3, 1fr);
+  
+  /* 2. Espaçamento Horizontal */
+  column-gap: 2rem;
+  
+  /* 3. AQUI RESOLVE O GRUDADO: Espaço Vertical grande */
+  row-gap: 3rem; 
+  
+  padding-bottom: 3rem;
 }
 
-/* Mobile*/
+/* RESPONSIVIDADE */
+
+/* TABLET (Entre 640px e 900px) -> 2 Colunas */
+@media (max-width: 56.25rem) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 2.5rem;
+  }
+}
+
+/* MOBILE (Abaixo de 640px) -> 1 Coluna */
 @media (max-width: 40rem) {
   header {
     padding: 1.875rem 1.25rem 4.375rem 1.25rem;
@@ -237,37 +283,22 @@ header {
     justify-content: center;
   }
   
-  .brand-logo {
-    margin: 0 auto;
-  }
+  .brand-logo { margin: 0 auto; }
 
-  .subtitle {
-    font-size: 0.9rem;
-    padding: 0 1rem;
-  }
+  .subtitle { font-size: 0.9rem; padding: 0 1rem; }
 
-  .search-wrapper {
-    margin-top: -2.18rem;
-    padding: 0;
-  }
+  .search-wrapper { margin-top: -2.18rem; padding: 0; }
 
-  .search-input {
-    padding: 0.875rem 0.75rem;
-    font-size: 1rem;
-  }
+  .search-input { padding: 0.875rem 0.75rem; font-size: 1rem; }
+  .search-icon { padding-left: 0.75rem; font-size: 1rem; }
 
-  .search-icon {
-    padding-left: 0.75rem;
-    font-size: 1rem;
-  }
-
+  /* Grid Mobile */
   .cards-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    /* Garante espaço no mobile também */
+    row-gap: 2.5rem; 
   }
 
-  .app-container {
-    padding-bottom: 2.5rem;
-  }
+  .app-container { padding-bottom: 4rem; }
 }
 </style>

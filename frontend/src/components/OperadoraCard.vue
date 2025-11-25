@@ -1,7 +1,9 @@
 <template>
   <div class="card">
+    
     <div class="card-header">
       <h3>{{ operadora.razao_social }}</h3>
+      
       <span class="badge" :class="getBadgeClass(operadora.modalidade)">
         {{ operadora.modalidade }}
       </span>
@@ -38,6 +40,7 @@
         📍 {{ operadora.cidade }} - {{ operadora.uf }}
       </p>
     </div>
+
   </div>
 </template>
 
@@ -51,8 +54,8 @@ const props = defineProps({
   }
 })
 
-// logica de copia do cnpj
 const copied = ref(false);
+
 const copyCnpj = (cnpj) => {
   if (!cnpj) return;
   navigator.clipboard.writeText(cnpj);
@@ -60,19 +63,15 @@ const copyCnpj = (cnpj) => {
   setTimeout(() => { copied.value = false; }, 2000);
 }
 
-// logica das cores (corrigida)
 const getBadgeClass = (modalidade) => {
   if (!modalidade) return 'badge-default';
-  
-  // converte para minusculo para facilitar comparações
   const text = String(modalidade).toLowerCase();
   
-  // Verificações mais abrangentes
-  if (text.includes('odont')) return 'badge-odonto'; 
+  if (text.includes('odont')) return 'badge-odonto';
   if (text.includes('medic') || text.includes('médic')) return 'badge-medica';
   if (text.includes('administradora') || text.includes('admin')) return 'badge-admin';
   if (text.includes('seguradora')) return 'badge-seguradora';
-  if (text.includes('filantropia') || text.includes('filantr')) return 'badge-filantropia';
+  if (text.includes('filantropia')) return 'badge-filantropia';
   
   return 'badge-default';
 }
@@ -83,12 +82,16 @@ const getBadgeClass = (modalidade) => {
   background: white;
   border: 0;
   border-radius: 0.75rem;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 0.125rem 0.625rem rgba(28, 43, 75, 0.05);
+  padding: 1rem;
+  
+  box-shadow: 0 0.25rem 0.75rem rgba(28, 43, 75, 0.08);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .card::before {
@@ -104,46 +107,48 @@ const getBadgeClass = (modalidade) => {
 }
 
 .card:hover {
-  transform: translateY(-0.25rem);
-  box-shadow: 0 0.75rem 1.25rem rgba(28, 43, 75, 0.1);
+  transform: translateY(-0.35rem);
+  box-shadow: 0 1rem 2rem rgba(28, 43, 75, 0.15);
 }
 
 .card:hover::before { opacity: 1; }
 
 .card-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  gap: 0.75rem;
+  flex-direction: column; /* Empilha Título e Badge */
+  align-items: center;
+  gap: 0.75rem; /* Espaço entre Título e Badge */
 }
 
 h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #1C2B4B;
   line-height: 1.4;
-  word-break: break-word;
+  overflow-wrap: break-word; 
+  word-wrap: break-word;
 }
 
-/* BADGE PADRÃO */
 .badge {
-  background-color: #F1F5F9; /* Cor padrão cinza claro */
+  background-color: #F1F5F9;
   color: #475569;
-  padding: 0.375rem 0.75rem;
+  padding: 0.25rem 0.75rem;
   border-radius: 1.25rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.031rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
   text-transform: uppercase;
-  white-space: nowrap;
-  flex-shrink: 0;
+  text-align: center;
+  display: inline-block;
 }
 
 .card-body {
   border-top: 0.0625rem solid #F0F2F5;
   padding-top: 1rem;
+  flex-grow: 1; 
 }
 
 .info-row {
@@ -167,7 +172,6 @@ h3 {
   word-break: break-word;
 }
 
-/* INTERATIVIDADE DO CNPJ */
 .clickable {
   cursor: pointer;
   position: relative;
@@ -190,6 +194,7 @@ h3 {
   border-radius: 4px;
   animation: fadeIn 0.3s;
   pointer-events: none;
+  white-space: nowrap;
 }
 @keyframes fadeIn { from { opacity: 0; top: -1rem; } to { opacity: 1; top: -1.8rem; } }
 
@@ -227,39 +232,15 @@ h3 {
   gap: 0.25rem;
 }
 
-/* CORES DAS BADGES */
-.badge-odonto { 
-  background-color: #E3F2FD !important; 
-  color: #1565C0 !important; 
-} 
-
-.badge-medica { 
-  background-color: #E8F5E9 !important; 
-  color: #2E7D32 !important; 
-} 
-
-.badge-admin { 
-  background-color: #F3E5F5 !important; 
-  color: #7B1FA2 !important; 
-}
-
-.badge-seguradora {
-  background-color: #FFF3E0 !important;
-  color: #E65100 !important;
-}
-
-.badge-filantropia {
-  background-color: #FCE4EC !important;
-  color: #880E4F !important;
-}
-
-.badge-default {
-  background-color: #F1F5F9 !important;
-  color: #64748B !important;
-}
+/* CORES BADGES */
+.badge-odonto { background-color: #E3F2FD !important; color: #1565C0 !important; } 
+.badge-medica { background-color: #E8F5E9 !important; color: #2E7D32 !important; } 
+.badge-admin { background-color: #F3E5F5 !important; color: #7B1FA2 !important; }
+.badge-seguradora { background-color: #FFF3E0 !important; color: #E65100 !important; }
+.badge-filantropia { background-color: #FCE4EC !important; color: #880E4F !important; }
+.badge-default { background-color: #F1F5F9 !important; color: #64748B !important; }
 
 @media (max-width: 40rem) {
-  .card { padding: 1rem; }
-  .badge { font-size: 0.7rem; padding: 0.25rem 0.5rem; }
+  .card { padding: 1.25rem; }
 }
 </style>
