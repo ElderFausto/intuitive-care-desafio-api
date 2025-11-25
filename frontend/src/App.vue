@@ -81,7 +81,7 @@ const operadoras = ref([]);
 const loading = ref(false);
 const hasSearched = ref(false);
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/operadoras/search', '') : "http://127.0.0.1:8000";
 
 onMounted(async () => {
   try {
