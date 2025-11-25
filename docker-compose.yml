@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: ./backend
+    container_name: intuitive-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app # Hot-reload: reflete mudanças do código na hora
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: intuitive-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Evita conflito de node_modules entre host e container
+    depends_on:
+      - backend # Só inicia depois que o backend carregar
+    environment:
+      # Aponta para o localhost, pois o navegador (browser) roda na sua máquina
+      - VITE_API_URL=http://localhost:8000/operadoras/search
+    restart: always
