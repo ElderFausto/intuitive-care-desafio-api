@@ -89,8 +89,7 @@ class CsvService:
         query_only_nums = re.sub(r'[^0-9]', '', query)
 
         # Se o usuário digitar 3 números prioriza a busca por CNPJ
-        if len(query_only_nums) >= 3:
-            # Filtra o DataFrame onde a coluna CNPJ contém os números digitados
+        if len(query_only_nums) >= 6:
             cnpj_matches = target_df[target_df['CNPJ'].str.contains(query_only_nums, na=False)]
             
             if not cnpj_matches.empty:
