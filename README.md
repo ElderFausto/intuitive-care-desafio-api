@@ -85,7 +85,7 @@ A maneira mais simples e garantida de rodar a aplicação, sem se preocupar com 
 
 1.  **Clonar o repositório:**
     ```bash
-    git clone [https://github.com/SEU-USUARIO/intuitive-care-desafio-api.git](https://github.com/SEU-USUARIO/intuitive-care-desafio-api.git)
+    git clone [https://github.com/elderfausto/intuitive-care-desafio-api.git](https://github.com/elderfausto/intuitive-care-desafio-api.git)
     cd intuitive-care-desafio-api
     ```
 
